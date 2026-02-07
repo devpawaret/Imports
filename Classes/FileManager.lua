@@ -58,24 +58,24 @@ end
 
 function FileManager:Load(fileName)
     local filePath, pathErrMsg = self:GetPath(fileName)
-    if not filePath then return false, pathErrMsg end
+    if not filePath then return {}, pathErrMsg end
 
     if not isfile(filePath) then
-        return nil, "File does not exist." 
+        return {}, "File does not exist." 
     end
 
     local isReadSucc, fileResult = pcall(function()
         return readfile(filePath)
     end)
     if not isReadSucc then
-        return nil, "File Read Error: " .. tostring(fileResult)
+        return {}, "File Read Error: " .. tostring(fileResult)
     end
 
     local isDecodeSucc, decodedResult = pcall(function()
         return HttpService:JSONDecode(fileResult)
     end)
     if not isDecodeSucc then
-        return nil, "File JSON Decode Error: " .. tostring(decodedResult)
+        return {}, "File JSON Decode Error: " .. tostring(decodedResult)
     end
 
     return decodedResult, nil
