@@ -39,6 +39,14 @@ function FileManager:Save(fileName, data)
     local filePath, pathErrMsg = self:GetPath(fileName)
     if not filePath then return false, pathErrMsg end
 
+    if data == nil then
+        return false, "Error: 'Data' cannot be nil."
+    end
+
+    if type(data) == "table" and next(data) == nil then
+        return false, "Error: 'Data' cannot be empty table."
+    end
+
     local isEncodingSucc, encodingResult = pcall(function()
         return HttpService:JSONEncode(data)
     end)
